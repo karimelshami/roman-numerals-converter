@@ -3,29 +3,39 @@ import EnglishToRomanDictionary from 'Constants/englishToRoman'
 import RomanToEnglishDictionary from 'Constants/romanToEnglish'
 
 const MainContainer = () => {
-  const [romanNumber, setRomanNumber] = useState('I')
-  const [englishNumber, setEnglishNumber] = useState(0)
+  const [romanNumber, setRomanNumber] = useState('')
+  const [englishNumber, setEnglishNumber] = useState('')
+  const [convertedRomanNumber, setConvertedRomanNumber] = useState('')
+  const [convertedEnglishNumber, setConvertedEnglishNumber] = useState('')
   const handleInputChange = (value, type) => {
-    if ((type = 'englishToRoman')) setEnglishNumber(value)
-    if ((type = 'romanToEnglish')) setRomanNumber(value)
+    if ((type = 'englishToRoman')) setEnglishNumber(value.toString())
+    if ((type = 'romanToEnglish')) setRomanNumber(value.toString())
   }
   const breakNumber = (number, length, place) =>
     number * Math.pow(10, length - place - 1)
 
   const toRoman = () => {
-    let romanNumber = ''
-    let length = englishNumber.toString().length
+    let tempRomanNumber = ''
+    let length = englishNumber.length
     for (let i = 0; i < length; i++) {
       if (englishNumber[i] != 0) {
-        romanNumber = romanNumber.concat(
+        tempRomanNumber = tempRomanNumber.concat(
           EnglishToRomanDictionary[breakNumber(englishNumber[i], length, i)]
         )
       }
     }
-    setRomanNumber(romanNumber)
+    setConvertedRomanNumber(tempRomanNumber)
   }
   const toEnglish = () => {
-    console.log('bewbewbew')
+    let tempEnglishNumber = 0
+    let length = romanNumber.length
+    for (let i = 0; i < length; i++) {
+      if (RomanToEnglishDictionary[romanNumber[i]]) {
+        tempEnglishNumber =
+          parseInt(RomanToEnglishDictionary[romanNumber[i]]) + tempEnglishNumber
+      }
+    }
+    setConvertedEnglishNumber(tempEnglishNumber)
   }
 
   return (
@@ -39,7 +49,7 @@ const MainContainer = () => {
           }
         />
         <button onClick={() => toRoman()}>convert</button>
-        <span>The number is {romanNumber}</span>
+        <span>The number is {convertedRomanNumber}</span>
       </div>
       <br />
       <div>
@@ -51,7 +61,7 @@ const MainContainer = () => {
           }
         />
         <button onClick={() => toEnglish()}>convert</button>
-        <span>The number is {englishNumber}</span>
+        <span>The number is {convertedEnglishNumber}</span>
       </div>
     </>
   )
