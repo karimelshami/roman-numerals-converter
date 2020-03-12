@@ -8,11 +8,17 @@ import { breakNumber } from 'Helpers'
 import Paper from '@material-ui/core/Paper'
 import EnglishToRomanDictionary from 'Constants/englishToRoman'
 import RomanToEnglishDictionary from 'Constants/romanToEnglish'
-import { intialState, tabs } from './TranslatorContainer.constants'
+import {
+  intialState,
+  tabs,
+  regax,
+  helperText
+} from './TranslatorContainer.constants'
 
 const TranslatorContainer = () => {
   const [number, setNumber] = useState(intialState.number)
   const [selectedTab, setSelectedTab] = useState(intialState.selectedTab)
+  const [error, setError] = useState(intialState.error)
 
   const {
     englishNumber,
@@ -24,23 +30,48 @@ const TranslatorContainer = () => {
   const handleTabSelect = key => {
     if (selectedTab === key) return
     setSelectedTab(key)
+    resetState()
+  }
+
+  const resetState = () => {
+    setNumber(intialState.number)
+    setError(intialState.error)
   }
 
   const handleInputChange = (value, type) => {
     if (type === 'englishToRoman') {
       setNumber({ ...number, englishNumber: value.toString() })
+      setError({ value: false, msg: helperText.englishToRomanRules })
     }
     if (type === 'romanToEnglish') {
-      setNumber({ ...number, romanNumber: value.toString() })
+      setNumber({ ...number, romanNumber: value.toString().toUpperCase() })
+      setError({ value: false, msg: helperText.romanToEnglishRules })
     }
   }
 
   const convert = () => {
-    if (selectedTab === 0) toRoman()
-    if (selectedTab === 1) toEnglish()
+    if (selectedTab === 0) return validateInput('toRoman')
+    if (selectedTab === 1) return validateInput('toEnglish')
   }
 
-  const validateInput = () => {}
+  const validateInput = type => {
+    // debugger
+    if (type === 'toRoman') {
+      if (englishNumber === '') {
+        return setError({ value: true, msg: helperText.empty })
+      } else if (0 > parseInt(englishNumber) > 4000) {
+        return setError({ value: true, msg: helperText.englishToRomanRules })
+      }
+      return toRoman()
+    }
+    if (type === 'toEnglish') {
+      if (romanNumber === '')
+        return setError({ value: true, msg: helperText.empty })
+      else if (!regax.roman.test(romanNumber))
+        return setError({ value: true, msg: helperText.romanToEnglishRules })
+    }
+    return toEnglish()
+  }
 
   const toRoman = () => {
     let englishNumberArray = englishNumber.split('')
@@ -85,8 +116,9 @@ const TranslatorContainer = () => {
       return (
         <InputCard
           type="number"
+          error={error.value}
           placeholderText="Type numbers"
-          helperText="You should only type numbers"
+          helperText={error.msg ? error.msg : helperText.englishToRomanRules}
           value={convertedEnglishNumber}
           handleChange={event =>
             handleInputChange(event.target.value, 'englishToRoman')
@@ -100,9 +132,10 @@ const TranslatorContainer = () => {
     if (selectedTab === 1) {
       return (
         <InputCard
+          error={error.value}
           type="text"
           placeholderText="Type roman numbers"
-          helperText="You should only type roman numbers"
+          helperText={error.msg ? error.msg : helperText.romanToEnglishRules}
           value={convertedRomanNumber}
           handleChange={event =>
             handleInputChange(event.target.value, 'romanToEnglish')
