@@ -10,21 +10,19 @@ const InputCard = props => {
   const {
     helperText,
     handleChange,
-    value,
     placeholderText,
     type,
-    output
+    error
   } = props
 
   return (
     <Card>
       <CardContent>
         <TextField
-          disabled={output}
           type={type}
           fullWidth
           placeholder={placeholderText}
-          value={output && value}
+          error ={error}
           onChange={handleChange}
           helperText={<Typography>{helperText}</Typography>}
         />

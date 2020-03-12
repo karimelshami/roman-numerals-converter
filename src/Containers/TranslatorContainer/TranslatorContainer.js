@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import Paper from '@material-ui/core/Paper'
 import InputCard from 'Componants/InputCard'
 import OutputCard from 'Componants/OutputCard'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
 import Tabs from 'Componants/Tabs'
+import { breakNumber } from 'Helpers'
+import Paper from '@material-ui/core/Paper'
 import EnglishToRomanDictionary from 'Constants/englishToRoman'
 import RomanToEnglishDictionary from 'Constants/romanToEnglish'
 
@@ -14,22 +14,34 @@ const tabs = [
   { label: 'Roman to English', key: 1 }
 ]
 const TranslatorContainer = () => {
-  const [romanNumber, setRomanNumber] = useState('')
-  const [englishNumber, setEnglishNumber] = useState('')
-  const [convertedRomanNumber, setConvertedRomanNumber] = useState('')
-  const [convertedEnglishNumber, setConvertedEnglishNumber] = useState('')
+  const [number, setNumber] = useState({
+    englishNumber: '',
+    romanNumber: '',
+    convertedEnglishNumber: '',
+    convertedRomanNumber: ''
+  })
+  const {
+    englishNumber,
+    romanNumber,
+    convertedEnglishNumber,
+    convertedRomanNumber
+  } = number
+
   const [selectedTab, setSelectedTab] = useState(0)
 
   const handleTabSelect = () => {
     if (selectedTab === 0) setSelectedTab(1)
     if (selectedTab === 1) setSelectedTab(0)
   }
+
   const handleInputChange = (value, type) => {
-    if ((type = 'englishToRoman')) setEnglishNumber(value.toString())
-    if ((type = 'romanToEnglish')) setRomanNumber(value.toString())
+    if ((type === 'englishToRoman')) {
+      setNumber({ ...number, englishNumber: value.toString() })
+    }
+    if ((type === 'romanToEnglish')) {
+      setNumber({ ...number, romanNumber: value.toString() })
+    }
   }
-  const breakNumber = (number, length, place) =>
-    number * Math.pow(10, length - place - 1)
 
   const convert = () => {
     if (selectedTab === 0) toRoman()
@@ -37,27 +49,41 @@ const TranslatorContainer = () => {
   }
 
   const toRoman = () => {
-    let tempRomanNumber = ''
-    let length = englishNumber.length
+    let englishNumberArray = englishNumber.split('')
+    let length = englishNumberArray.length
+    let current
+    let currentValue
+    let total = ''
     for (let i = 0; i < length; i++) {
-      if (englishNumber[i] != 0) {
-        tempRomanNumber = tempRomanNumber.concat(
-          EnglishToRomanDictionary[breakNumber(englishNumber[i], length, i)]
-        )
+      current = englishNumber[i]
+      currentValue =
+        EnglishToRomanDictionary[breakNumber(englishNumber[i], length, i)]
+      if (current != 0) {
+        total = total.concat(currentValue)
       }
     }
-    setConvertedRomanNumber(tempRomanNumber)
+    setNumber({ ...number, convertedRomanNumber: total })
   }
   const toEnglish = () => {
-    let tempEnglishNumber = 0
-    let length = romanNumber.length
+    let romanNumberArray = romanNumber.split('')
+    let length = romanNumberArray.length
+    let current
+    let currentValue
+    let next
+    let nextValue
+    let total = 0
     for (let i = 0; i < length; i++) {
-      if (RomanToEnglishDictionary[romanNumber[i]]) {
-        tempEnglishNumber =
-          parseInt(RomanToEnglishDictionary[romanNumber[i]]) + tempEnglishNumber
+      current = romanNumberArray[i]
+      currentValue = RomanToEnglishDictionary[current]
+      next = romanNumberArray[i + 1]
+      nextValue = RomanToEnglishDictionary[next]
+      if (currentValue < nextValue) {
+        total -= currentValue
+      } else {
+        total += currentValue
       }
     }
-    setConvertedEnglishNumber(tempEnglishNumber)
+    setNumber({ ...number, convertedEnglishNumber: total })
   }
 
   const renderEnglishToRomanCard = () => {
@@ -111,12 +137,17 @@ const TranslatorContainer = () => {
         color="primary"
         fullWidth
       >
-        Convert
-        {selectedTab === 0 ? ' to roman numerals' : 'to english numerals'}
+        {`Convert ${
+          selectedTab === 0 ? ' to roman numerals' : 'to english numerals'
+        }`}
       </Button>
       <OutputCard
         output={
-          selectedTab === 0 ? convertedRomanNumber : convertedEnglishNumber
+          selectedTab === 0 && convertedRomanNumber
+            ? convertedRomanNumber
+            : selectedTab === 1 && convertedEnglishNumber
+            ? convertedEnglishNumber
+            : '...'
         }
       />
     </Paper>

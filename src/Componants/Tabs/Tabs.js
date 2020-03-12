@@ -4,13 +4,8 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { useStyles } from './Tabs.style'
 const SwitchingTabs = props => {
-  const { tabs, handleChange, value } = props
+  const { tabs, handleChange, value, disabled } = props
   const classes = useStyles()
-  // const [value, setValue] = React.useState(0)
-
-  // const handleChange = ( newValue) => {
-  //   setValue(newValue)
-  // }
 
   return (
     <Tabs
@@ -19,6 +14,7 @@ const SwitchingTabs = props => {
       indicatorColor="primary"
       textColor="primary"
       centered
+      disabled={disabled}
     >
       {tabs && tabs.map(tab => <Tab key={tab.key} label={tab.label} />)}
     </Tabs>
