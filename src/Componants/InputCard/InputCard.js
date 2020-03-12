@@ -7,13 +7,7 @@ import { useStyles } from './InputCard.style'
 
 const InputCard = props => {
   const classes = useStyles()
-  const {
-    helperText,
-    handleChange,
-    placeholderText,
-    type,
-    error
-  } = props
+  const { helperText, handleChange, placeholderText, type, error } = props
 
   return (
     <Card>
@@ -22,7 +16,7 @@ const InputCard = props => {
           type={type}
           fullWidth
           placeholder={placeholderText}
-          error ={error}
+          error={error}
           onChange={handleChange}
           helperText={<Typography>{helperText}</Typography>}
         />

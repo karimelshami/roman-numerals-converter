@@ -8,18 +8,12 @@ import { breakNumber } from 'Helpers'
 import Paper from '@material-ui/core/Paper'
 import EnglishToRomanDictionary from 'Constants/englishToRoman'
 import RomanToEnglishDictionary from 'Constants/romanToEnglish'
+import { intialState, tabs } from './TranslatorContainer.constants'
 
-const tabs = [
-  { label: 'English to Roman', key: 0 },
-  { label: 'Roman to English', key: 1 }
-]
 const TranslatorContainer = () => {
-  const [number, setNumber] = useState({
-    englishNumber: '',
-    romanNumber: '',
-    convertedEnglishNumber: '',
-    convertedRomanNumber: ''
-  })
+  const [number, setNumber] = useState(intialState.number)
+  const [selectedTab, setSelectedTab] = useState(intialState.selectedTab)
+
   const {
     englishNumber,
     romanNumber,
@@ -27,18 +21,16 @@ const TranslatorContainer = () => {
     convertedRomanNumber
   } = number
 
-  const [selectedTab, setSelectedTab] = useState(0)
-
-  const handleTabSelect = () => {
-    if (selectedTab === 0) setSelectedTab(1)
-    if (selectedTab === 1) setSelectedTab(0)
+  const handleTabSelect = key => {
+    if (selectedTab === key) return
+    setSelectedTab(key)
   }
 
   const handleInputChange = (value, type) => {
-    if ((type === 'englishToRoman')) {
+    if (type === 'englishToRoman') {
       setNumber({ ...number, englishNumber: value.toString() })
     }
-    if ((type === 'romanToEnglish')) {
+    if (type === 'romanToEnglish') {
       setNumber({ ...number, romanNumber: value.toString() })
     }
   }
@@ -47,6 +39,8 @@ const TranslatorContainer = () => {
     if (selectedTab === 0) toRoman()
     if (selectedTab === 1) toEnglish()
   }
+
+  const validateInput = () => {}
 
   const toRoman = () => {
     let englishNumberArray = englishNumber.split('')
@@ -121,7 +115,7 @@ const TranslatorContainer = () => {
   return (
     <Paper>
       <Tabs
-        handleChange={() => handleTabSelect()}
+        handleChange={key => handleTabSelect(key)}
         tabs={tabs}
         value={selectedTab}
       />
