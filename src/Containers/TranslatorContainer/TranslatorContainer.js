@@ -56,9 +56,10 @@ const TranslatorContainer = () => {
 
   const validateInput = type => {
     if (type === 'toRoman') {
+      let parsedEnglishNumber = parseInt(englishNumber)
       if (englishNumber === '') {
         return setError({ value: true, msg: helperText.empty })
-      } else if (0 > parseInt(englishNumber) > 4000) {
+      } else if (0 > parsedEnglishNumber || parsedEnglishNumber > 4000) {
         return setError({ value: true, msg: helperText.englishToRomanRules })
       }
       return toRoman()
@@ -66,7 +67,7 @@ const TranslatorContainer = () => {
     if (type === 'toEnglish') {
       if (romanNumber === '')
         return setError({ value: true, msg: helperText.empty })
-      else if (!regax.roman.test(romanNumber))
+      if (!regax.roman.test(romanNumber))
         return setError({ value: true, msg: helperText.romanToEnglishRules })
     }
     return toEnglish()
