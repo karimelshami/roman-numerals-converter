@@ -175,9 +175,10 @@ const TranslatorContainer = () => {
         <Button
           onClick={() => convert()}
           variant="contained"
-          color="primary"
+          color="secondary"
           fullWidth
           data-testid="convert-button"
+
         >
           {`Convert ${
             selectedTab === 0 ? ' to roman numerals' : 'to english numerals'
