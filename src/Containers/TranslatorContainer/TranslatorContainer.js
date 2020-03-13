@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import InputCard from 'Componants/InputCard'
 import OutputCard from 'Componants/OutputCard'
+import Header from 'Componants/Header'
+import Dialog from 'Componants/Dialog'
+import Tabs from 'Componants/Tabs'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import Tabs from 'Componants/Tabs'
 import Paper from '@material-ui/core/Paper'
+
 import { breakNumber } from 'Helpers'
 import { useStyles } from './TranslatorContainer.styles'
 import EnglishToRomanDictionary from 'Constants/englishToRoman'
@@ -15,11 +18,13 @@ import {
   regax,
   helperText
 } from './TranslatorContainer.constants'
+import { Typography } from '@material-ui/core'
 
 const TranslatorContainer = () => {
   const [number, setNumber] = useState(intialState.number)
   const [selectedTab, setSelectedTab] = useState(intialState.selectedTab)
   const [error, setError] = useState(intialState.error)
+  const [dialogState, setDialogState] = useState(false)
   const classes = useStyles()
 
   const {
@@ -147,39 +152,53 @@ const TranslatorContainer = () => {
     }
   }
 
+  const toggleDialogState = () => setDialogState(!dialogState)
+
   return (
-    <Paper className={classes.root}>
-      <Tabs
-        handleChange={key => handleTabSelect(key)}
-        tabs={tabs}
-        value={selectedTab}
+    <>
+      <Header
+        buttonText="Learn more"
+        buttonAction={() => toggleDialogState()}
       />
-      <Grid container>
-        <Grid item xs={12}>
-          {renderEnglishToRomanCard()}
-          {renderRomanToEnglishCard()}
+      <Paper className={classes.root}>
+        <Tabs
+          handleChange={key => handleTabSelect(key)}
+          tabs={tabs}
+          value={selectedTab}
+        />
+        <Grid container>
+          <Grid item xs={12}>
+            {renderEnglishToRomanCard()}
+            {renderRomanToEnglishCard()}
+          </Grid>
         </Grid>
-      </Grid>
-      <Button
-        onClick={() => convert()}
-        variant="contained"
-        color="primary"
-        fullWidth
-      >
-        {`Convert ${
-          selectedTab === 0 ? ' to roman numerals' : 'to english numerals'
-        }`}
-      </Button>
-      <OutputCard
-        output={
-          selectedTab === 0 && convertedRomanNumber
-            ? convertedRomanNumber
-            : selectedTab === 1 && convertedEnglishNumber
-            ? convertedEnglishNumber
-            : '...'
-        }
+        <Button
+          onClick={() => convert()}
+          variant="contained"
+          color="primary"
+          fullWidth
+          data-testid="convert-button"
+        >
+          {`Convert ${
+            selectedTab === 0 ? ' to roman numerals' : 'to english numerals'
+          }`}
+        </Button>
+        <OutputCard
+          output={
+            selectedTab === 0 && convertedRomanNumber
+              ? convertedRomanNumber
+              : selectedTab === 1 && convertedEnglishNumber
+              ? convertedEnglishNumber
+              : '...'
+          }
+        />
+      </Paper>
+      <Dialog
+        open={dialogState}
+        content={<Typography paragraph>{helperText.learnMore}</Typography>}
+        handleClose={() => toggleDialogState()}
       />
-    </Paper>
+    </>
   )
 }
 export default TranslatorContainer
