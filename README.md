@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+to run the test cases run npm run test
+
 Modern Roman numerals are written by expressing each digit separately starting with the left most digit and skipping any digit with a value of zero. For example, in Roman numerals 1990 is rendered: 1000=M, 900=CM, 90=XC; resulting in MCMXC. 2008 is written as 2000=MM, 8=VIII; or MMVIII.
 
 There is a group of school children who are currently learning Roman numerals, and your task is to create for them a basic Roman numerals converter that can convert a Roman numeral to and from an integer. Your solution should:

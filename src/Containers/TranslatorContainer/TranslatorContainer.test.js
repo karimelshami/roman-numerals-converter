@@ -3,6 +3,8 @@ import { render, fireEvent, cleanup } from '@testing-library/react'
 import TranslatorContainer from './TranslatorContainer'
 import '@testing-library/jest-dom/extend-expect'
 
+// to run the test cases run npm run test
+
 describe('Translator Container', () => {
   afterEach(cleanup)
 
