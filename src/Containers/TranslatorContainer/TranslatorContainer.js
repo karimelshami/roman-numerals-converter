@@ -4,8 +4,9 @@ import OutputCard from 'Componants/OutputCard'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Tabs from 'Componants/Tabs'
-import { breakNumber } from 'Helpers'
 import Paper from '@material-ui/core/Paper'
+import { breakNumber } from 'Helpers'
+import { useStyles } from './TranslatorContainer.styles'
 import EnglishToRomanDictionary from 'Constants/englishToRoman'
 import RomanToEnglishDictionary from 'Constants/romanToEnglish'
 import {
@@ -19,6 +20,7 @@ const TranslatorContainer = () => {
   const [number, setNumber] = useState(intialState.number)
   const [selectedTab, setSelectedTab] = useState(intialState.selectedTab)
   const [error, setError] = useState(intialState.error)
+  const classes = useStyles()
 
   const {
     englishNumber,
@@ -146,7 +148,7 @@ const TranslatorContainer = () => {
   }
 
   return (
-    <Paper>
+    <Paper className={classes.root}>
       <Tabs
         handleChange={key => handleTabSelect(key)}
         tabs={tabs}
