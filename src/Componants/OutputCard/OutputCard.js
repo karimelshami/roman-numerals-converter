@@ -2,6 +2,7 @@ import React from 'react'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
+import PropTypes from 'prop-types'
 
 const OutputCard = props => {
   const { output } = props
@@ -16,4 +17,7 @@ const OutputCard = props => {
   )
 }
 
+OutputCard.propTypes = {
+  output: PropTypes.string
+}
 export default OutputCard
